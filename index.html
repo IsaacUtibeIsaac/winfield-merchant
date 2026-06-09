@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WinfieldTEC | Merchant Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --error: #ef4444;
+            --success: #22c55e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .pwa-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand { text-align: center; margin-bottom: 2rem; }
+        .brand h1 { font-size: 1.5rem; letter-spacing: -1px; color: var(--accent); }
+        .brand p { font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; opacity: 0.8; font-weight: 600; }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus { border-color: var(--accent); }
+
+        .phone-input-group { display: grid; grid-template-columns: 80px 1fr; gap: 10px; }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 0.75rem;
+            color: var(--bg);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        #statusMsg {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+
+        .loader { border: 2px solid #f3f3f3; border-top: 2px solid var(--accent); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="pwa-container">
+    <div class="brand">
+        <h1>WinfieldTEC</h1>
+        <p>Merchant Core Engine | Stage 3</p>
+    </div>
+
+    <form id="signupForm">
+        <div class="form-group">
+            <label>Corporate Email</label>
+            <input type="email" id="email" placeholder="name@company.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>Secure Password</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <div class="phone-input-group">
+                <select id="dialCode">
+                    <option value="+1">US +1</option>
+                    <option value="+44">UK +44</option>
+                    <option value="+234" selected>NG +234</option>
+                    <option value="+971">AE +971</option>
+                </select>
+                <input type="tel" id="phone" placeholder="800 000 0000" required>
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Initialize Merchant Account</button>
+    </form>
+
+    <div id="statusMsg"></div>
+</div>
+
+<script>
+    // WinfieldTEC Core Credentials
+    const SUPABASE_URL = "https://nflxcavbvymlqulyppgs.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_XLQ97vA1qJmOOqJm-7_05Q_O93NiJ53";
+    
+    // Quick structural fix to ensure the script parses the library initialization perfectly
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById('signupForm');
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // UI State: Loading
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span> Processing...';
+        status.style.display = 'none';
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const fullPhone = document.getElementById('dialCode').value + document.getElementById('phone').value;
+
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        phone_number: fullPhone,
+                        role: 'pending_merchant', 
+                        created_at: new Date().toISOString()
+                    }
+                }
+            });
+
+            if (error) throw error;
+
+            // Success State
+            status.style.display = 'block';
+            status.style.background = 'rgba(34, 197, 94, 0.2)';
+            status.style.color = 'var(--success)';
+            status.innerHTML = `<strong>Success!</strong><br>Check ${email} for your confirmation link.`;
+            form.reset();
+
+        } catch (err) {
+            // Error State
+            status.style.display = 'block';
+            status.style.background = 'rgba(239, 68, 68, 0.2)';
+            status.style.color = 'var(--error)';
+            status.innerText = err.message;
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'Initialize Merchant Account';
+        }
+    });
+</script>
+
+</body>
+</html>
