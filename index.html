@@ -2,66 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Digital Ledger [day-day-business] — Professional Retail Trust Ecosystem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Ledger [day-day-business]</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b1329; color: #ffffff; overflow-x: hidden; line-height: 1.6; }
-        header { background-color: #1c2541; border-bottom: 1px solid #3a506b; position: fixed; width: 100%; top: 0; z-index: 1000; padding: 18px 20px; }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 20px; font-weight: 800; color: #ffffff; text-decoration: none; }
-        .logo span { color: #64dfdf; }
-        .hero-section { padding: 140px 20px 60px 20px; background: linear-gradient(180deg, #1c2541 0%, #0b1329 100%); text-align: center; }
-        .ecosystem-window { background-color: #111c38; border: 1px solid #3a506b; border-radius: 12px; padding: 50px 20px; margin: 0 auto; max-width: 900px; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6); }
-        .btn-primary { background-color: #ffffff; color: #0b1329; font-size: 16px; font-weight: 700; padding: 16px 50px; border-radius: 30px; border: none; cursor: pointer; text-transform: uppercase; }
-        .btn-primary:hover { background-color: #64dfdf; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0b1329; color: #ffffff; margin: 0; padding: 20px; }
+        .hero { text-align: center; padding: 60px 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: auto; }
+        .card { background: #1c2541; padding: 30px; border-radius: 15px; cursor: pointer; border: 1px solid #3a506b; transition: 0.3s; }
+        .card:hover { border-color: #64dfdf; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: #111c38; padding: 40px; border-radius: 20px; max-width: 600px; text-align: center; }
+        .btn { background: #64dfdf; color: #0b1329; padding: 15px 40px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 40px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="#" class="logo">Digital Ledger <span>[day-day-business]</span></a>
-        </div>
-    </header>
-
-    <section class="hero-section">
-        <div class="ecosystem-window">
-            <h1>Welcome to the Ecosystem</h1>
-            <p style="margin: 20px 0 40px; color: #8da9c4;">Professional Retail Trust Engine</p>
-            <button class="btn-primary" id="signupBtn">Sign Up Store</button>
-        </div>
+    <section class="hero">
+        <h1>DL [day-day-business]</h1>
+        <p>Securing Retail Trust</p>
+        <button class="btn" id="signupBtn">SIGN UP STORE</button>
     </section>
 
+    <div class="grid">
+        <div class="card" onclick="openModal('Core Ledger', 'Simple, instant, and accurate bookkeeping for your daily business.')"><h3>Core Digital Ledger</h3></div>
+        <div class="card" onclick="openModal('Anti-Theft', 'Automated detection of suspicious behavior and unauthorized price changes.')"><h3>Anti-Theft Intelligence</h3></div>
+        <div class="card" onclick="openModal('Analytics', 'Actionable insights into staff and sales performance.')"><h3>Performance Analytics</h3></div>
+        <div class="card" onclick="openModal('Compliance', 'Compliance-ready foundation laid for future regulatory integration (Coming 2028).')"><h3>Compliance-Ready</h3></div>
+    </div>
+
+    <div id="modal" class="modal" onclick="this.style.display='none'">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDesc"></p>
+            <div style="height: 200px; background: #3a506b; margin: 20px 0; display: flex; align-items: center; justify-content: center;">[Visual Illustration]</div>
+            <button onclick="document.getElementById('modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
     <script>
-        // Production API Credentials
-        const SUPABASE_URL = 'https://nflxcavbvymlqulyppgs.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_XLQ97vA1qJmOOqJm-7_05Q_O93NiJ53';
-        
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        function openModal(title, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modal').style.display = 'flex';
+        }
 
-        // Sign Up Logic
+        const _supabase = supabase.createClient('https://nflxcavbvymlqulyppgs.supabase.co', 'sb_publishable_XLQ97vA1qJmOOqJm-7_05Q_O93NiJ53');
         document.getElementById('signupBtn').addEventListener('click', async () => {
-            const bName = prompt("Enter your Business/Store Name:");
-            if (!bName) return;
-
-            const email = prompt("Enter your Owner Administrator Email:");
-            if (!email) return;
-
-            // Inserts store into the database
-            const { data, error } = await _supabase
-                .from('merchants') 
-                .insert([{ business_name: bName, email: email, role: 'OWNER' }]);
-
-            if (error) {
-                if (error.code === '23505') {
-                    alert(`Registration Failed: You have already registered a store named "${bName}" under this email.`);
-                } else {
-                    alert("Database Error: " + error.message);
-                }
-            } else {
-                alert(`Success! "${bName}" ecosystem created. You are registered as the OWNER.`);
+            const bName = prompt("Enter Business Name:");
+            const email = prompt("Enter Email:");
+            if (bName && email) {
+                const { error } = await _supabase.from('merchants').insert([{ business_name: bName, email: email, role: 'OWNER' }]);
+                alert(error ? "Error: " + error.message : "Success! Store Registered.");
             }
         });
     </script>
