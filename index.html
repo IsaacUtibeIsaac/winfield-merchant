@@ -6,298 +6,16 @@
     <title>Digital Ledger [day-day-business] — Professional Retail Trust Ecosystem</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* RESET AND BASE STYLES */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        body {
-            background-color: #0b1329;
-            color: #ffffff;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* NAVIGATION BAR */
-        header {
-            background-color: #1c2541;
-            border-bottom: 1px solid #3a506b;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 20px;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: #ffffff;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
-        .logo span {
-            color: #64dfdf;
-            font-weight: 400;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-
-        nav ul li a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: color 0.2s ease;
-        }
-
-        nav ul li a:hover {
-            color: #64dfdf;
-        }
-
-        /* HERO / ECOSYSTEM DIAGRAM SECTION */
-        .hero-section {
-            padding: 140px 20px 60px 20px;
-            background: linear-gradient(180deg, #1c2541 0%, #0b1329 100%);
-            text-align: center;
-        }
-
-        .hero-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-            color: #ffffff;
-            text-transform: uppercase;
-        }
-
-        .hero-subtitle {
-            font-size: 16px;
-            color: #8da9c4;
-            margin-bottom: 45px;
-            font-weight: 400;
-        }
-
-        /* GRAPH INTERACTIVE PLATFORM WINDOW */
-        .ecosystem-window {
-            background-color: #111c38;
-            border: 1px solid #3a506b;
-            border-radius: 12px;
-            padding: 50px 20px;
-            margin-bottom: 50px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
-            position: relative;
-        }
-
-        /* NETWORK MAP SIMULATION */
-        .network-visualization {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 25px;
-            margin-bottom: 50px;
-            position: relative;
-            min-height: 200px;
-        }
-
-        .central-cloud {
-            background: linear-gradient(135deg, #3a506b 0%, #1c2541 100%);
-            border: 2px solid #64dfdf;
-            border-radius: 50px;
-            padding: 22px 45px;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: 0 0 35px rgba(100, 223, 223, 0.3);
-            z-index: 5;
-            letter-spacing: 0.5px;
-        }
-
-        .network-node {
-            background-color: #0b1329;
-            border: 1px solid #3a506b;
-            border-radius: 6px;
-            padding: 14px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            min-width: 160px;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
-        }
-
-        .node-left { border-left: 3px solid #ffb703; }
-        .node-right { border-left: 3px solid #64dfdf; }
-
-        .node-p {
-            color: #ffffff;
-            margin-bottom: 2px;
-            letter-spacing: 0.3px;
-            display: block;
-        }
-
-        .node-small {
-            font-size: 11px;
-            color: #8da9c4;
-            display: block;
-        }
-
-        /* DIRECT CALL TO ACTION BUTTON */
-        .cta-container {
-            margin: 20px 0 10px 0;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background-color: #ffffff;
-            color: #0b1329;
-            font-size: 16px;
-            font-weight: 700;
-            padding: 16px 50px;
-            border-radius: 30px;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background-color: #1c2541;
-            color: #64dfdf;
-            border-color: #3a506b;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(100, 223, 223, 0.15);
-        }
-
-        /* 3-COLUMN FEATURE GRIDS */
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            padding: 0 20px 40px 20px;
-        }
-
-        .feature-card {
-            background-color: #111c38;
-            border: 1px solid #1c2541;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: left;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            border-color: #3a506b;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #64dfdf;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #1c2541;
-            padding-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .feature-list {
-            list-style: none;
-        }
-
-        .feature-list li {
-            font-size: 13.5px;
-            margin-bottom: 12px;
-            color: #cbd5e1;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .feature-list li::before {
-            content: "▹";
-            position: absolute;
-            left: 0;
-            color: #64dfdf;
-        }
-
-        .feature-list li strong {
-            color: #ffffff;
-        }
-
-        /* FOOTER MODULE */
-        footer {
-            background-color: #0b1329;
-            border-top: 1px solid #1c2541;
-            padding: 40px 20px;
-            margin-top: 40px;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
-            color: #8da9c4;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s ease;
-        }
-
-        .footer-links a:hover {
-            color: #ffffff;
-        }
-
-        .copyright {
-            font-size: 13px;
-            color: #8da9c4;
-        }
-
-        /* RESPONSIVENESS */
-        @media (max-width: 768px) {
-            nav ul { display: none; }
-            .features-grid { grid-template-columns: 1fr; }
-            .hero-title { font-size: 24px; }
-            .network-visualization { flex-direction: column; gap: 20px; }
-            .footer-container { flex-direction: column; text-align: center; gap: 15px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0b1329; color: #ffffff; overflow-x: hidden; line-height: 1.6; }
+        header { background-color: #1c2541; border-bottom: 1px solid #3a506b; position: fixed; width: 100%; top: 0; z-index: 1000; padding: 18px 20px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 800; color: #ffffff; text-decoration: none; }
+        .logo span { color: #64dfdf; }
+        .hero-section { padding: 140px 20px 60px 20px; background: linear-gradient(180deg, #1c2541 0%, #0b1329 100%); text-align: center; }
+        .ecosystem-window { background-color: #111c38; border: 1px solid #3a506b; border-radius: 12px; padding: 50px 20px; margin: 0 auto; max-width: 900px; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6); }
+        .btn-primary { background-color: #ffffff; color: #0b1329; font-size: 16px; font-weight: 700; padding: 16px 50px; border-radius: 30px; border: none; cursor: pointer; text-transform: uppercase; }
+        .btn-primary:hover { background-color: #64dfdf; }
     </style>
 </head>
 <body>
@@ -305,124 +23,45 @@
     <header>
         <div class="nav-container">
             <a href="#" class="logo">Digital Ledger <span>[day-day-business]</span></a>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Credit Pipeline</a></li>
-                    <li><a href="#">Roadmap</a></li>
-                    <li><a href="#">Resources</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
 
     <section class="hero-section">
-        <div class="hero-container">
-            <h1 class="hero-title">[day-day-business]: LEVERAGING PROFESSIONAL ECOSYSTEM MODELS</h1>
-            <p class="hero-subtitle">Built on Trust. Scaled for Global Retail Commerce.</p>
-            
-            <div class="ecosystem-window">
-                <div class="network-visualization">
-                    <div class="network-node node-left">
-                        <span class="node-p">GENERAL MANAGER</span>
-                        <span class="node-small">Administrative Root</span>
-                    </div>
-                    <div class="network-node node-left">
-                        <span class="node-p">STORE MANAGER</span>
-                        <span class="node-small">Operational Control</span>
-                    </div>
-                    
-                    <div class="central-cloud">
-                        <span>SYSTEM CORE</span>
-                        <span style="font-size: 11px; font-weight: normal; display: block; color: #8da9c4; margin-top: 2px;">🔒 Encrypted Ledger</span>
-                    </div>
-
-                    <div class="network-node node-right">
-                        <span class="node-p">FINTECH PARTNER</span>
-                        <span class="node-small">Liquidity Pipeline</span>
-                    </div>
-                    <div class="network-node node-right">
-                        <span class="node-p">COMPLIANCE OFFICER</span>
-                        <span class="node-small">Legal System</span>
-                    </div>
-                </div>
-
-                <div class="cta-container">
-                    <button class="btn-primary" id="signupBtn">Sign Up Store</button>
-                </div>
-            </div>
+        <div class="ecosystem-window">
+            <h1>Welcome to the Ecosystem</h1>
+            <p style="margin: 20px 0 40px; color: #8da9c4;">Professional Retail Trust Engine</p>
+            <button class="btn-primary" id="signupBtn">Sign Up Store</button>
         </div>
     </section>
-
-    <section class="features-grid">
-        <div class="feature-card">
-            <div class="card-title">1. Role-Based Access &amp; Security</div>
-            <ul class="feature-list">
-                <li><strong>OWNER:</strong> Full Administrative Root configuration control.</li>
-                <li><strong>MANAGER:</strong> Full Operational Control and inventory allocation.</li>
-                <li><strong>SALES:</strong> Sandboxed Point of Sale terminal restrictions.</li>
-                <li><strong>REVOCATION:</strong> Instant remote deployment device lockout.</li>
-            </ul>
-        </div>
-
-        <div class="feature-card">
-            <div class="card-title">2. Digital Ledger &amp; Credit Pipeline</div>
-            <ul class="feature-list">
-                <li><strong>AUTOMATED:</strong> High speed local transaction logging lines.</li>
-                <li><strong>B2C CUSTOMER:</strong> Digitized structural neighborhood "Trust Book".</li>
-                <li><strong>BEHAVIORAL:</strong> Micro credit scoring utilizing alternative parameters.</li>
-                <li><strong>FINTECH INTEGRATION:</strong> Programmatic short term liquidity pipelines.</li>
-            </ul>
-        </div>
-
-        <div class="feature-card">
-            <div class="card-title">3. Asset Management &amp; Global Scale</div>
-            <ul class="feature-list">
-                <li><strong>FIXED ASSETS:</strong> Integrated physical hardware and facility tracking.</li>
-                <li><strong>VALUATION:</strong> Real time retail inventory value engines.</li>
-                <li><strong>COMPUTATION:</strong> Dynamic systemic depreciation algorithms.</li>
-                <li><strong>MULTI-CURRENCY:</strong> Live base conversion switches.</li>
-            </ul>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="#">About Us</a>
-                <a href="#">Pricing</a>
-                <a href="#">Legal Compliance</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Contact</a>
-            </div>
-            <div class="copyright">
-                Powered by Winfieldtec &copy; 2026. All Rights Reserved.
-            </div>
-        </div>
-    </footer>
 
     <script>
-        // Replace these placeholder strings with your actual cloud keys from Supabase Settings -> API
-        const SUPABASE_URL = 'https://your-actual-project-id.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.your-actual-key-here';
+        // Production API Credentials
+        const SUPABASE_URL = 'https://nflxcavbvymlqulyppgs.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_XLQ97vA1qJmOOqJm-7_05Q_O93NiJ53';
         
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Action script when merchant clicks 'Sign Up Store'
+        // Sign Up Logic
         document.getElementById('signupBtn').addEventListener('click', async () => {
-            const email = prompt("Enter your store administrator email to register:");
+            const bName = prompt("Enter your Business/Store Name:");
+            if (!bName) return;
+
+            const email = prompt("Enter your Owner Administrator Email:");
             if (!email) return;
 
-            // Instantly logs the registration signup straight into your cloud database table
+            // Inserts store into the database
             const { data, error } = await _supabase
                 .from('merchants') 
-                .insert([{ email: email, created_at: new Date() }]);
+                .insert([{ business_name: bName, email: email, role: 'OWNER' }]);
 
             if (error) {
-                alert("Database Connection Error: " + error.message);
+                if (error.code === '23505') {
+                    alert(`Registration Failed: You have already registered a store named "${bName}" under this email.`);
+                } else {
+                    alert("Database Error: " + error.message);
+                }
             } else {
-                alert("Success! Your store has been registered in the cloud ledger pipeline.");
+                alert(`Success! "${bName}" ecosystem created. You are registered as the OWNER.`);
             }
         });
     </script>
